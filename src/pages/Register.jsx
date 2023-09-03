@@ -5,8 +5,13 @@ import gupsup from "../assets/GupSupLogoMain.png";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import "animate.css";
+import { useDispatch, useSelector } from "react-redux";
+import { register } from "../features/authSlice";
 
 const Register = () => {
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state?.auth?.registeredUser);
+  console.log(user._id,'This is user');
   const initialValues = {
     userName: "",
     userEmail: "",
@@ -34,7 +39,14 @@ const Register = () => {
     initialValues,
     validationSchema,
     onSubmit: (values, action) => {
-      console.log(values);
+      dispatch(
+        register({
+          userName: values.userName,
+          userEmail: values.userEmail,
+          userPassword: values.userPassword,
+          userConfirmPassword: values.userConfirmPassword,
+        })
+      );
       action.resetForm();
     },
   });
