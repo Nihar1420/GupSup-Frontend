@@ -17,10 +17,25 @@ const registerService = async (
       }
     );
     console.log(data.data, "This is registered user data");
+    localStorage.setItem("userId", data?.data?._id);
     return data;
   } catch (error) {
     return error;
   }
 };
 
-export { registerService };
+const loginService = async (userEmail, userPassword) => {
+  try {
+    const { data } = await axios.post(`http://localhost:5000/api/auth/login`, {
+      userEmail,
+      userPassword,
+    });
+    console.log(data, "This is login data");
+    localStorage.setItem("loggedInId", data?.data?._id);
+    return data;
+  } catch (error) {
+    return error;
+  }
+};
+
+export { registerService, loginService };
