@@ -92,7 +92,7 @@ const Login = () => {
           </span>
         </form>
       </LoginFrom>
-      <ToastContainer autoClose={3000} />
+      <ToastContainer autoClose={3000} theme="dark"/>
     </>
   );
 };

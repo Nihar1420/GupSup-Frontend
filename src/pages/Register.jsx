@@ -13,6 +13,7 @@ import "react-toastify/dist/ReactToastify.css";
 const Register = () => {
   const dispatch = useDispatch();
   const userId = localStorage.getItem("userId");
+  const loggedInId = localStorage.getItem("loggedInId");
   const registeredUser = useSelector((state) => state.auth.registeredUser);
   const navigate = useNavigate();
   const initialValues = {
@@ -55,12 +56,16 @@ const Register = () => {
   });
 
   useEffect(() => {
-    console.log("entered");
     if (userId) {
       navigate("/login");
-      console.log("navigated");
     }
   }, [registeredUser]);
+
+  useEffect(() => {
+    if (loggedInId) {
+      navigate("/");
+    }
+  }, []);
 
   return (
     <>
@@ -120,7 +125,7 @@ const Register = () => {
           </span>
         </form>
       </RegisterForm>
-      <ToastContainer autoClose={3000} />
+      <ToastContainer autoClose={3000} theme="dark"/>
     </>
   );
 };
