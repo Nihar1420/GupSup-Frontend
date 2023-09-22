@@ -32,6 +32,7 @@ const loginService = async (userEmail, userPassword) => {
     });
     console.log(data, "This is login data");
     localStorage.setItem("loggedInId", data?.data?._id);
+    localStorage.setItem("loggedUserData", JSON.stringify(data?.data));
     return data;
   } catch (error) {
     return error;
