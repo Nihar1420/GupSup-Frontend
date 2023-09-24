@@ -1,12 +1,14 @@
-import React, { useEffect } from "react";
+import React, { useEffect ,useState} from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import { getAllContacts } from "../features/userSlice";
 import Contacts from "../components/Contacts";
+import Welcome from "../components/Welcome";
+import ChatBox from "../components/ChatBox";
 
 const Chat = () => {
+  const [chatSelected, setChatSelected] = useState(undefined);
   const dispatch = useDispatch();
-  const userId = localStorage.getItem("userId");
   const loggedInId = localStorage.getItem("loggedInId");
   useEffect(() => {
     dispatch(getAllContacts({ userId: loggedInId }));
@@ -15,7 +17,8 @@ const Chat = () => {
   return (
     <Container>
       <div className="container">
-        <Contacts allContacts={allConts} />
+        <Contacts allContacts={allConts} setChatSelected={setChatSelected}/>
+        {chatSelected !== undefined ? <ChatBox selectedChat = {chatSelected}/> : <Welcome />}
       </div>
     </Container>
   );
