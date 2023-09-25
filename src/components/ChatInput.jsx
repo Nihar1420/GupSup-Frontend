@@ -20,7 +20,9 @@ const ChatInput = ({ handleSendMessage }) => {
 
   const sendMessage = (event) => {
     event.preventDefault();
-    handleSendMessage(msg);
+    if (msg.length !== 0) {
+      handleSendMessage(msg);
+    }
     setMsg("");
   };
   return (
@@ -127,6 +129,7 @@ const Container = styled.div`
       align-items: center;
       background-color: #9a86f3;
       border: none;
+      cursor: pointer;
       @media screen and (min-width: 720px) and (max-width: 1080px) {
         padding: 0.3rem 1rem;
         svg {

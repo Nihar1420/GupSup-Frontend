@@ -3,10 +3,21 @@ import styled from "styled-components";
 import Logout from "./Logout";
 import ChatInput from "./ChatInput";
 import ChatMessages from "./ChatMessages";
+import { useDispatch } from "react-redux";
+import { sendMessage } from "../features/messageSlice";
 
 const ChatBox = ({ selectedChat }) => {
+  const dispatch = useDispatch();
+  const loggedInId = localStorage.getItem("loggedInId");
   const handleSendMessage = (msg) => {
     console.log(msg);
+    dispatch(
+      sendMessage({
+        senderId: loggedInId,
+        getterId: selectedChat?._id,
+        message: msg,
+      })
+    );
   };
   return (
     <Container>
