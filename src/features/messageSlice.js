@@ -22,6 +22,18 @@ export const sendMessage = createAsyncThunk(
   }
 );
 
+export const getUserMessages = createAsyncThunk(
+  "message/getUserMessages",
+  async ({ senderId, getterId }, thunkAPI) => {
+    const response = await messageService.getUserMessageService(
+      senderId,
+      getterId
+    );
+    if (response) return response;
+    else thunkAPI.rejectWithValue(response);
+  }
+);
+
 const messageSlice = createSlice({
   name: "messageSlice",
   initialState,
@@ -32,6 +44,9 @@ const messageSlice = createSlice({
       state.isSuccess = false;
       state.isError = false;
       state.isLoading = false;
+    },
+    setMessages: (state, action) => {
+      state.messages.push(action.payload);
     },
   },
   extraReducers: (builder) => {
@@ -47,8 +62,20 @@ const messageSlice = createSlice({
       state.isLoading = false;
       state.isError = true;
     });
+    builder.addCase(getUserMessages.pending, (state) => {
+      state.isLoading = true;
+    });
+    builder.addCase(getUserMessages.fulfilled, (state, action) => {
+      state.messages = action.payload;
+      state.isLoading = false;
+      state.isSuccess = true;
+    });
+    builder.addCase(getUserMessages.rejected, (state) => {
+      state.isLoading = false;
+      state.isError = true;
+    });
   },
 });
 
-export const { clearState } = messageSlice.actions;
+export const { clearState, setMessages } = messageSlice.actions;
 export default messageSlice.reducer;

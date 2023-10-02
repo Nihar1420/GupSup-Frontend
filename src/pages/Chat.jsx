@@ -1,10 +1,12 @@
-import React, { useEffect ,useState} from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import { getAllContacts } from "../features/userSlice";
 import Contacts from "../components/Contacts";
 import Welcome from "../components/Welcome";
 import ChatBox from "../components/ChatBox";
+import { socket } from "../config/socket_config";
+import { setMessages } from "../features/messageSlice";
 
 const Chat = () => {
   const [chatSelected, setChatSelected] = useState(undefined);
@@ -13,12 +15,44 @@ const Chat = () => {
   useEffect(() => {
     dispatch(getAllContacts({ userId: loggedInId }));
   }, []);
+
+  useEffect(() => {
+    socket.connect();
+    socket.on("connect", () => {
+      console.log("successfully connected");
+    });
+    socket.emit("user-login", { loggedInUserId: loggedInId });
+    return () => {
+      socket.off("connect");
+    };
+  }, []);
+
+  useEffect(() => {
+    socket.on("receive-message", ({ senderId, getterId, message }) => {
+      console.log(message, senderId, getterId);
+      dispatch(
+        setMessages({
+          senderId: senderId,
+          getterId: getterId,
+          message: message,
+        })
+      );
+    });
+
+    return () => {
+      socket.off("receive-message");
+    };
+  }, []);
   const allConts = useSelector((state) => state.users.allContacts);
   return (
     <Container>
       <div className="container">
-        <Contacts allContacts={allConts} setChatSelected={setChatSelected}/>
-        {chatSelected !== undefined ? <ChatBox selectedChat = {chatSelected}/> : <Welcome />}
+        <Contacts allContacts={allConts} setChatSelected={setChatSelected} />
+        {chatSelected !== undefined ? (
+          <ChatBox selectedChat={chatSelected} />
+        ) : (
+          <Welcome />
+        )}
       </div>
     </Container>
   );

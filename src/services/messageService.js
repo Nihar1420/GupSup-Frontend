@@ -10,8 +10,22 @@ const sendMessageService = async (senderId, getterId, message) => {
         message,
       }
     );
-    console.log(data, "This is data");
     return data;
+  } catch (error) {
+    return error;
+  }
+};
+
+const getUserMessageService = async (senderId, getterId) => {
+  try {
+    const { data } = await axios.post(
+      `http://localhost:5000/api/message/get-user-messages`,
+      {
+        senderId,
+        getterId,
+      }
+    );
+    return data.data;
   } catch (error) {
     return error;
   }
@@ -19,6 +33,7 @@ const sendMessageService = async (senderId, getterId, message) => {
 
 const messageService = {
   sendMessageService,
+  getUserMessageService,
 };
 
 export default messageService;
